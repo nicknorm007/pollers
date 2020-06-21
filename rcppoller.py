@@ -4,9 +4,9 @@ from bs4 import BeautifulSoup
 
 class RcpPoller:
     def __init__(self, dataFile):
-        self.dataFile = dataFile
-        self.poll_data = []
-        self.poll_map = {}
+        self.__dataFile = dataFile
+        self.__poll_data = []
+        self.__poll_map = {}
 
     def __pointSpread(self,elem):
         avrge = elem.find('td', class_='spread')
@@ -21,14 +21,14 @@ class RcpPoller:
             print(self.__pointSpread(poll_elem))
 
     def readPollingDataUrls(self):
-        with open(self.dataFile, newline='') as csvfile:
-            self.poll_data = csv.reader(csvfile)
-            for row in self.poll_data:
-                self.poll_map[ row[0] ] = row[1]
-        print(self.poll_map)
+        with open(self.__dataFile, newline='') as csvfile:
+            self.__poll_data = csv.reader(csvfile)
+            for row in self.__poll_data:
+                self.__poll_map[ row[0] ] = row[1]
+        print(self.__poll_map)
 
     def iterateStates(self):
-        for state,url in self.poll_map.items():
+        for state,url in self.__poll_map.items():
             page = requests.get(url)
             soup = BeautifulSoup(page.content, 'html.parser')
             results = soup.find(id='polling-data-rcp')
