@@ -49,12 +49,14 @@ class RcpPoller:
 
     def process(self):
         self.__readPollingUrlData()
+        left_val = 0
         for contest,url in self.__poll_map.items():
+            left_val += 1
             page = requests.get(url)
             soup = BeautifulSoup(page.content, 'html.parser')
             results = soup.find(id='polling-data-rcp')
             self.__current_contest = contest
             print(contest)
             self.__findAverages(results)
-    
-        
+            self.__left.append(left_val)
+
