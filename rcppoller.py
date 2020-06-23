@@ -16,6 +16,8 @@ class RcpPoller:
         self.__xlabel = ''
         self.__ylabel = ''
         self.__title = ''
+        self.__democrat = ''
+        self.__republican = ''
         self.__current_contest = ''
 
     def __pointSpread(self,elem):
@@ -25,11 +27,16 @@ class RcpPoller:
     def __tabulate(self, text):
         point_spread = text.split('+')
         if len(point_spread) == 1:
-            self.__height.append(0)
+            self.__height.append(0.5)
+            self.__colors.append("black")
         else:
             self.__height.append(float(point_spread[1]))
+            candidate = point_spread[0].replace(" ", "")
+            if candidate == self.__democrat:
+                self.__colors.append("blue")
+            else:
+                self.__colors.append("red")
         self.__labels.append(self.__current_contest)
-        #self.__colors.append("red")
 
     def __findAverages(self,res):
         avg_poll_elems = res.find_all('tr', class_='rcpAvg')
@@ -50,13 +57,15 @@ class RcpPoller:
                     self.__title = row[0]
                     self.__xlabel = row[1]
                     self.__ylabel = row[2]
+                    self.__democrat = row[3]
+                    self.__republican = row[4]
                 else:
                     self.__poll_map[ row[0] ] = row[1]
 
     def __displayPollingData(self):
         plt.bar(self.__left, self.__height, 
                 tick_label = self.__labels, 
-                    width = 0.8, color = ['red', 'green'])
+                    width = 0.8, color = self.__colors)
         plt.xlabel(self.__xlabel) 
         plt.ylabel(self.__ylabel) 
         plt.title(self.__title) 
