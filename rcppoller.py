@@ -2,6 +2,7 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 from array import *
+import matplotlib.pyplot as plt
 
 class RcpPoller:
     def __init__(self, dataFile):
@@ -11,6 +12,7 @@ class RcpPoller:
         self.__left = []
         self.__height = []
         self.__labels = []
+        self.__colors = []
         self.__xlabel = ''
         self.__ylabel = ''
         self.__title = ''
@@ -22,8 +24,12 @@ class RcpPoller:
 
     def __tabulate(self, text):
         point_spread = text.split('+')
+        if len(point_spread) == 1:
+            self.__height.append(0)
+        else:
+            self.__height.append(float(point_spread[1]))
         self.__labels.append(self.__current_contest)
-        self.__height.append(point_spread[1])
+        #self.__colors.append("red")
 
     def __findAverages(self,res):
         avg_poll_elems = res.find_all('tr', class_='rcpAvg')
@@ -47,6 +53,15 @@ class RcpPoller:
                 else:
                     self.__poll_map[ row[0] ] = row[1]
 
+    def __displayPollingData(self):
+        plt.bar(self.__left, self.__height, 
+                tick_label = self.__labels, 
+                    width = 0.8, color = ['red', 'green'])
+        plt.xlabel(self.__xlabel) 
+        plt.ylabel(self.__ylabel) 
+        plt.title(self.__title) 
+        plt.show()
+
     def process(self):
         self.__readPollingUrlData()
         left_val = 0
@@ -59,4 +74,6 @@ class RcpPoller:
             print(contest)
             self.__findAverages(results)
             self.__left.append(left_val)
+        #display graph    
+        self.__displayPollingData()
 
