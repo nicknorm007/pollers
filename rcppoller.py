@@ -32,10 +32,9 @@ class RcpPoller:
         else:
             self.__height.append(float(point_spread[1]))
             candidate = point_spread[0].replace(" ", "")
-            if candidate == self.__democrat:
-                self.__colors.append("blue")
-            else:
-                self.__colors.append("red")
+            self.__colors.append("blue") if candidate == self.__democrat \
+                else self.__colors.append("red")
+
         self.__labels.append(self.__current_contest)
 
     def __findAverages(self,res):
@@ -65,7 +64,7 @@ class RcpPoller:
     def __displayPollingData(self):
         plt.bar(self.__left, self.__height, 
                 tick_label = self.__labels, 
-                    width = 0.8, color = self.__colors)
+                    width = 0.6, color = self.__colors)
         plt.xlabel(self.__xlabel) 
         plt.ylabel(self.__ylabel) 
         plt.title(self.__title) 
