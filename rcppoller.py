@@ -27,7 +27,7 @@ class RcpPoller:
     def __tabulate(self, text):
         point_spread = text.split('+')
         if len(point_spread) == 1:
-            self.__height.append(0.5)
+            self.__height.append(0.2)
             self.__colors.append("black")
         else:
             self.__height.append(float(point_spread[1]))
